@@ -51,8 +51,12 @@ class AppTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyles.kRegularInstrumentSans(
-          fontSize: FontSize.k18FontSize,
+          fontSize: FontSize.k16FontSize,
           color: kColorLightGrey,
+        ),
+        errorStyle: TextStyles.kMediumInstrumentSans(
+          fontSize: FontSize.k16FontSize,
+          color: kColorRed,
         ),
         border: InputBorder.none,
         focusedBorder: underlineInputBorder(
@@ -61,6 +65,10 @@ class AppTextFormField extends StatelessWidget {
         ),
         enabledBorder: underlineInputBorder(
           borderColor: kColorPrimary,
+          borderWidth: 1.5,
+        ),
+        errorBorder: underlineInputBorder(
+          borderColor: kColorRed,
           borderWidth: 1.5,
         ),
         contentPadding: AppPaddings.combined(
@@ -80,7 +88,7 @@ class AppTextFormField extends StatelessWidget {
     required double borderWidth,
   }) {
     return UnderlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(15),
       borderSide: BorderSide(
         color: borderColor,
         width: borderWidth,

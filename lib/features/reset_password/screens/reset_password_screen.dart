@@ -1,5 +1,5 @@
 import 'package:brijraj/constants/color_constants.dart';
-import 'package:brijraj/features/login/controllers/login_controller.dart';
+import 'package:brijraj/features/reset_password/controllers/reset_password_controller.dart';
 import 'package:brijraj/styles/textstyles.dart';
 import 'package:brijraj/widgets/app_button.dart';
 import 'package:brijraj/widgets/app_loading_overlay.dart';
@@ -10,13 +10,16 @@ import 'package:brijraj/widgets/app_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({
+class ResetPasswordScreen extends StatelessWidget {
+  ResetPasswordScreen({
     super.key,
+    required this.userName,
   });
 
-  final LoginController _controller = Get.put(
-    LoginController(),
+  final String userName;
+
+  final ResetPasswordController _controller = Get.put(
+    ResetPasswordController(),
   );
 
   @override
@@ -45,34 +48,51 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     AppSpaces.v50,
-                    AppTextFormField(
-                      controller: _controller.mobileNumberController,
-                      hintText: 'Mobile Number / Username',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a valid username';
-                        }
-                        return null;
-                      },
+                    Obx(
+                      () => AppTextFormField(
+                        controller: _controller.newPasswordController,
+                        hintText: 'New Password',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a valid new password';
+                          }
+                          return null;
+                        },
+                        isObscure: _controller.obscuredNewPassword.value,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _controller.toggleNewPasswordVisibility();
+                          },
+                          icon: Icon(
+                            _controller.obscuredConfirmPassword.value
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            size: 20,
+                          ),
+                        ),
+                      ),
                     ),
                     AppSpaces.v16,
                     Obx(
                       () => AppTextFormField(
-                        controller: _controller.passwordController,
-                        hintText: 'Password',
+                        controller: _controller.confirmPasswordController,
+                        hintText: 'Confirm Password',
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter a valid password';
+                            return 'Please confirm your password';
+                          }
+                          if (value != _controller.newPasswordController.text) {
+                            return 'Passwords do not match';
                           }
                           return null;
                         },
-                        isObscure: _controller.obscuredText.value,
+                        isObscure: _controller.obscuredConfirmPassword.value,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            _controller.togglePasswordVisibility();
+                            _controller.toggleConfirmPasswordVisibility();
                           },
                           icon: Icon(
-                            _controller.obscuredText.value
+                            _controller.obscuredConfirmPassword.value
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                             size: 20,
@@ -83,14 +103,16 @@ class LoginScreen extends StatelessWidget {
                     AppSpaces.v24,
                     AppButton(
                       onTap: () async {
-                        _controller.hasAttemptedLogin.value = true;
+                        _controller.hasAttemptedSubmit.value = true;
                         if (_controller.formKey.currentState!.validate()) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          await _controller.login();
+                          _controller.resetPassword(
+                            userName: userName,
+                          );
                         }
                       },
                       buttonHeight: 40.appHeight,
-                      title: 'Login',
+                      title: 'Reset Password',
                     ),
                   ],
                 ),
