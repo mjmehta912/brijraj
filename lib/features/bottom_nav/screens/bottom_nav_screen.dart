@@ -26,7 +26,7 @@ class BottomNavScreen extends StatelessWidget {
     ),
     KeyedPage(
       key: UniqueKey(),
-      page: AddEntryScreen(),
+      page: const AddEntryScreen(),
     ),
     KeyedPage(
       key: UniqueKey(),
